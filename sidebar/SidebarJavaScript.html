@@ -6,50 +6,26 @@
    
   $(document).ready(function () 
   { 
-    $('#search').click(highlight);//点击search时，执行highlight函数； 
-    $('#clear').click(clearSelection);//点击clear按钮时，执行clearSelection函数； 
-   
-    function highlight() 
-    { 
-      clearSelection();//先清空一下上次高亮显示的内容； 
-      var searchText = $('#text').val();//获取你输入的关键字； 
-      var regExp = new RegExp(searchText, 'g');//创建正则表达式，g表示全局的，如果不用g，则查找到第一个就不会继续向下查找了； 
-      $('#sidebar-record-block').each(function()//遍历文章； 
-      { 
-        var html = $(this).html(); 
-        var newHtml = html.replace(regExp, '<span class="highlight">'+searchText+'</span>');//将找到的关键字替换，加上highlight属性； 
-   
-        $(this).html(newHtml);//更新文章； 
-      }); 
-      poll();
-    } 
-    function clearSelection() 
-    { 
-      $('#sidebar-record-block').each(function()//遍历 
-      { 
-        $(this).find('.highlight').each(function()//找到所有highlight属性的元素； 
-        { 
-          $(this).replaceWith($(this).html());//将他们的属性去掉； 
-        }); 
-      }); 
-      poll();
-    } 
+    
     
     
   }); 
   
   $(function() {
+   
+    
     // Assign handler functions to sidebar elements here, if needed.
 
     // Call the server here to retrieve any information needed to build
     // the dialog, if necessary.
-
-
-
-
-
-    // Start polling for updates        
+    
+    //$('#search').click(highlight);//点击search时，执行highlight函数； 
+    //$('#clear').click(clearSelection);//点击clear按钮时，执行clearSelection函数； 
+   
+    // Start polling for updates
+    
     poll();
+    
   });
 
   /**
@@ -62,7 +38,7 @@
    *                            Default is 2s (2000ms)
    */
   function poll(interval) {
-    interval = interval || 2000;
+    interval = interval || 1000;
     setTimeout(function() {
       google.script.run
         .withSuccessHandler(showRecord)
@@ -72,6 +48,7 @@
             element.disabled = false;
           })
         .getRecord();
+        //highlight(record)
     }, interval);
   };
 
@@ -81,6 +58,18 @@
    * @param {object[]}  Array of field headings & cell values
    */
   function showRecord(record) {
+    var flag = 0
+    clearSelection();
+    var searchText = $('#text').val();
+    
+    if (searchText.length == 0){
+        flag = 1
+    }
+    
+    var regExp = new RegExp(searchText, 'ig');
+    
+    
+    
     if (record.length) {
       for (var i = 0; i < record.length; i++) {
         // build field name on the fly, formatted field-1234
@@ -93,11 +82,20 @@
           $('#sidebar-record-block').append(newField);
         }
         // Replace content of the field div with new record
-        
-        
+        //.replace(regExp,'<span class="highlight">'+searchText+'</span>')
         $('#'+fieldId).replaceWith('<div id="'+fieldId+'" class="div-table-row"></div>');
-        $('#'+fieldId).append($('<div class="div-table-th">' + record[i].heading + '</div>'))
+        if (flag == 0){
+        $('#'+fieldId).append($('<div class="div-table-th">' + record[i].heading.replace(regExp,'<span class="highlight">'+searchText+'</span>')+ '</div>'))
+                      .append('<div class="div-table-td">' + record[i].cellval.replace(regExp,'<span class="highlight">'+searchText+'</span>') + '</div>');
+         }
+         else{
+         $('#'+fieldId).append($('<div class="div-table-th">' + record[i].heading+ '</div>'))
                       .append('<div class="div-table-td">' + record[i].cellval + '</div>');
+         }
+         
+                      
+        //alert(typeof record[i].cellval)
+        
       }
     }
 
@@ -106,12 +104,6 @@
     //Setup the next poll
     poll();
   }
-
-
-
-
-
-
   /**
    * Displays the given status message in the sidebar.
    *
@@ -126,6 +118,41 @@
     }
   }
   
-  
+  function highlight() 
+    { 
+      clearSelection();//先清空一下上次高亮显示的内容； 
+      var searchText = $('#text').val();//获取你输入的关键字;
+      
+      if (searchText != '')
+      {
+      
+      var regExp = new RegExp(searchText, 'g');//创建正则表达式，g表示全局的，如果不用g，则查找到第一个就不会继续向下查找了； 
+      $('#sidebar-record-block').each(function()//遍历文章； 
+      { 
+        //var html = $(this).html(); 
+        var html = $(".div-table-td").html(); 
+        alert(html)
+        //var html = record;
+        var newHtml = html.replace(regExp, '<span class="highlight">'+searchText+'</span>');//将找到的关键字替换，加上highlight属性； 
+        //alert(newHtml)
+        $(this).html(newHtml);//更新文章； 
+      }); 
+      //poll(100000);
+      
+      }
+    }
+    
+    
+    function clearSelection() 
+    { 
+      $('#sidebar-record-block').each(function()//遍历 
+      { 
+        $(this).find('.highlight').each(function()//找到所有highlight属性的元素； 
+        { 
+          $(this).replaceWith($(this).html());//将他们的属性去掉； 
+        }); 
+      }); 
+      //poll();
+    } 
 
 </script>

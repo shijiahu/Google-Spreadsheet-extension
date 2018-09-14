@@ -60,7 +60,9 @@ function getRecord() {
       cellval = Utilities.formatDate(cellval, Session.getScriptTimeZone() , "M/d/yyyy");
     }*/
     // TODO: Format all cell values using SheetConverter library
-    
+    if (typeof cellval == "number"){
+      cellval = cellval.toString();
+    }
     if (typeof cellval == "string"){
       cellval = cellval.replace(/\n/g, "<br />");
     }
@@ -85,5 +87,6 @@ function getRecord() {
     
   }
   */
+  Logger.log(typeof record)
   return record;
 }
