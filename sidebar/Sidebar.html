@@ -1,0 +1,30 @@
+<!-- Use a templated HTML printing scriptlet to import common stylesheet. -->
+<?!= HtmlService.createHtmlOutputFromFile('Stylesheet').getContent(); ?>
+
+<!-- Below is the HTML code that defines the sidebar element structure. -->
+<div class="sidebar branding-below">
+  <div>
+    <input type="text" id="text"/> 
+    <input type="button" id="search" value="Search"/> 
+    <input type="button" id="clear" value="Clear"/> 
+  </div>
+  <!-- The div-table class is used to make a group of divs behave like a table. -->
+  <div class="block div-table" id="sidebar-record-block">
+  </div>
+  <div class="block" id="sidebar-button-bar">
+  </div>
+  <div id="sidebar-status"></div>
+</div>
+
+<!-- Enter sidebar bottom-branding below. 
+<div class="sidebar bottom">
+  <img alt="Add-on logo" class="logo" width="25"
+      src="https://googledrive.com/host/0B0G1UdyJGrY6XzdjQWF4a1JYY1k/apps-script_2x.png">
+  <span class="gray branding-text">Record Viewer by Mogsdad</span>
+</div>
+-->
+
+<!-- Use a templated HTML printing scriptlet to import JavaScript. -->
+<?!= HtmlService.createHtmlOutputFromFile('SidebarJavaScript').getContent(); ?>
+
+
