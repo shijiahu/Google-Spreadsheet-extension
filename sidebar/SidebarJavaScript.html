@@ -65,7 +65,7 @@
     if (searchText.length == 0){
         flag = 1
     }
-    
+    searchText = '('+searchText.replace(/([\+\.\*\|\?\-\(\[\^\$])/g,'\\$1' ).replace(/\s+/g,'|')+')';//把匹配关键字中的正则符转义
     var regExp = new RegExp(searchText, 'ig');
     
     
@@ -85,9 +85,12 @@
         //.replace(regExp,'<span class="highlight">'+searchText+'</span>')
         $('#'+fieldId).replaceWith('<div id="'+fieldId+'" class="div-table-row"></div>');
         if (flag == 0){
-        $('#'+fieldId).append($('<div class="div-table-th">' + record[i].heading.replace(regExp,'<span class="highlight">'+searchText+'</span>')+ '</div>'))
-                      .append('<div class="div-table-td">' + record[i].cellval.replace(regExp,'<span class="highlight">'+searchText+'</span>') + '</div>');
-         }
+        //$('#'+fieldId).append($('<div class="div-table-th">' + record[i].heading.replace(regExp,'<span class="highlight">'+searchText+'</span>')+ '</div>'))
+          //            .append('<div class="div-table-td">' + record[i].cellval.replace(regExp,'<span class="highlight">'+searchText+'</span>') + '</div>');
+ 
+         $('#'+fieldId).append($('<div class="div-table-th">' + record[i].heading.replace(regExp,'<span class="highlight">$1</span>')+ '</div>'))
+                      .append('<div class="div-table-td">' + record[i].cellval.replace(regExp,'<span class="highlight">$1</span>') + '</div>');
+          }
          else{
          $('#'+fieldId).append($('<div class="div-table-th">' + record[i].heading+ '</div>'))
                       .append('<div class="div-table-td">' + record[i].cellval + '</div>');
